@@ -50,7 +50,7 @@ GPIO.setup(9,GPIO.OUT) #pinNum21_Green
 GPIO.setup(11,GPIO.OUT) #pinNum23_Red
 
 hx2 = HX711(5, 6)
-#DT 5_pinNum29, SCK 6_pinNum31
+    #DT 5_pinNum29, SCK 6_pinNum31
 hx2.set_reading_format("MSB", "MSB")
 
 hx2.set_reference_unit(98)
@@ -63,7 +63,7 @@ GPIO.output(11,False)
 GPIO.setup(25, GPIO.IN, pull_up_down = GPIO.PUD_DOWN) #IR_pinNum22
 
 GPIO.setup(8,GPIO.OUT) #pinNum24_Green
-GPIO.setup(7,GPIO.OUT) #pinNum26_Red
+GPIO.setup(1,GPIO.OUT) #pinNum28_Red
 
 hx3 = HX711(23, 24)
 #DT 23_pinNum16, SCK 24_pinNum18
@@ -73,30 +73,31 @@ hx3.set_reference_unit(98)
 #hx3.set_reference_unit(referenceUnit)
 
 GPIO.output(8,True)
-GPIO.output(7,False)
+GPIO.output(1,False)
 
-hx.reset()
-hx.tare()
-hx2.reset()
-hx2.tare()
-hx3.reset()
-hx3.tare()
+
 
 while 1:
     
     print("Tare done! Add weight now...")
-
+    hx.reset()
+    hx.tare()
+    hx2.reset()
+    hx2.tare()
+    hx3.reset()
+    hx3.tare()
     while True:
-        try:          
-            val = hx.get_weight(5)
-            val2 = hx2.get_weight(5)
-            val3 = hx3.get_weight(5)
+        try:
+            
+            val = abs(hx.get_weight(5))
+            val2 = abs(hx2.get_weight(5))
+            val3 = abs(hx3.get_weight(5))
             print('val1:', val)
             print('val2:', val2)
             print('val3:', val3)
             
             #Num1 rack
-            if(val < 5):
+            if(val < 50):
                 GPIO.output(27,True)
                 GPIO.output(22,False)
                 
@@ -108,7 +109,7 @@ while 1:
                     
                 #print(url)
                 # Making a PATCH request
-                r = requests.patch(url, data)
+                ###r = requests.patch(url, data)
                     
                 # check status code for response received
                 # success code - 200
@@ -118,9 +119,9 @@ while 1:
                 #print(r.content)
                 #break
             
-            elif(val > 500):
+            elif(val > 400):
                 input = GPIO.input(17)
-                if input_prev != input:
+                if input == 1:
                     print("detected", input)
                     input_prev = input
                     
@@ -135,7 +136,7 @@ while 1:
                     
                     #print(url)
                     # Making a PATCH request
-                    r = requests.patch(url, data)
+                    ###r = requests.patch(url, data)
                      
                     # check status code for response received
                     # success code - 200
@@ -152,7 +153,7 @@ while 1:
                     time.sleep(1)
                     
             #num2 rack
-            if(val2 < 5):
+            if(val2 < 50):
                 GPIO.output(9,True)
                 GPIO.output(11,False)
                 
@@ -164,7 +165,7 @@ while 1:
                     
                 #print(url)
                 # Making a PATCH request
-                r = requests.patch(url, data)
+                ###r = requests.patch(url, data)
                     
                 # check status code for response received
                 # success code - 200
@@ -174,9 +175,9 @@ while 1:
                 #print(r.content)
                 #break
             
-            elif(val2 > 500):
+            elif(val2 > 400):
                 input2 = GPIO.input(10)
-                if input_prev != input2:
+                if input2 == 1:
                     print("detected", input2)
                     input_prev = input2
                     
@@ -191,7 +192,7 @@ while 1:
                     
                     #print(url)
                     # Making a PATCH request
-                    r = requests.patch(url, data)
+                    ###r = requests.patch(url, data)
                      
                     # check status code for response received
                     # success code - 200
@@ -208,9 +209,9 @@ while 1:
                     time.sleep(1)
                     
             #num3 rack
-            if(val3 < 5):
+            if(val3 < 50):
                 GPIO.output(8,True)
-                GPIO.output(7,False)
+                GPIO.output(1,False)
                 
                 data = {
                         "position": 3,
@@ -220,7 +221,7 @@ while 1:
                     
                 #print(url)
                 # Making a PATCH request
-                r = requests.patch(url, data)
+                ###r = requests.patch(url, data)
                     
                 # check status code for response received
                 # success code - 200
@@ -230,14 +231,14 @@ while 1:
                 #print(r.content)
                 #break
             
-            elif(val3 > 500):
+            elif(val3 > 400):
                 input3 = GPIO.input(25)
-                if input_prev != input3:
+                if input3 == 1:
                     print("detected", input3)
                     input_prev = input3
                     
                     GPIO.output(8,False)
-                    GPIO.output(7,True)
+                    GPIO.output(1,True)
 
                     data = {
                         "position": 3,
@@ -247,7 +248,7 @@ while 1:
                     
                     #print(url)
                     # Making a PATCH request
-                    r = requests.patch(url, data)
+                    ###r = requests.patch(url, data)
                      
                     # check status code for response received
                     # success code - 200
